@@ -1,0 +1,14 @@
+var app = app || {};
+app.views = app.views || {};
+app.views.main = (function ($, ko) {
+
+  function mainViewModel() {
+    var self = this;
+    self.myData = ko.observableArray(getTestData());
+
+  }
+  function init() {
+    ko.applyBindings(new mainViewModel())
+  }
+  return { init: init };
+})($, ko);

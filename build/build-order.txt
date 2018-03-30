@@ -1,0 +1,2 @@
+..\src\templates\datagrid-table.html 
+..\src\components\datagrid-table.js
