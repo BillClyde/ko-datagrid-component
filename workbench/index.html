@@ -13,7 +13,8 @@
 </head>
     <body>
 		<div>
-      <datagrid params={data:myData}></datagrid>
+      <datagrid params='data:myCurrentPageItems'></datagrid>
+      <datagrid-pager params='pageItems:myCurrentPageItems, data:myData'></datagrid-pager>
 			</div>
 		</div>
     <script type='text/javascript' src='main.js'></script>

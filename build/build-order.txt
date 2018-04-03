@@ -1,2 +1,4 @@
-..\src\templates\datagrid-table.html 
+..\src\templates\datagrid-table.html
 ..\src\components\datagrid-table.js
+..\src\templates\datagrid-pager.html 
+..\src\components\datagrid-pager.js

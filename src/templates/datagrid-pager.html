@@ -1,0 +1,19 @@
+<!--pagerTemplate-->
+<nav aria-label="Table Page Navigation">
+  <ul class="pagination">
+    <li data-bind="attr: {class: 'page-item '+ (currentPageIndex() === 0 ? 'disabled' : '') } ">
+      <a class="page-link" href="#" data-bind="click: previousPage ">Previous</a>
+    </li>
+    <!-- ko foreach: ko.utils.range(minRange, maxRange) -->
+    <li data-bind="attr: {class: 'page-item ' + ($data == $parent.currentPageIndex() ? 'active' : '')}">
+      <a class="page-link" 
+         href="#" 
+         data-bind="text: $data + 1, 
+         click: function() { $parent.currentPageIndex($data) }"></a>
+    </li>
+    <!-- /ko -->
+    <li data-bind="attr: {class: 'page-item '+ (currentPageIndex() === maxPageIndex() ? 'disabled' : '')}">
+      <a class="page-link" href="#" data-bind="click: nextPage ">Next</a>
+    </li>
+  </ul>
+</nav>
