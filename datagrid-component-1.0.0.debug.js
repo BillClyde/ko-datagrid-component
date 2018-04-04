@@ -2,25 +2,34 @@
 * datagrid-component JavaScript Library
 * Authors: https://github.com/billclyde/datagrid-component/blob/master/README.md
 * License: MIT (http://www.opensource.org/licenses/mit-license.php)
-* Compiled At: 04/03/2018 15:45:31
+* Compiled At: 04/04/2018 15:44:39
 ***********************************************/
 
 (function (ko) {
 'use strict';
 
 /***********************************************
-* FILE: ..\src\templates\datagrid-table.html 
+* FILE: ..\src\templates\datagrid-table.html
 ***********************************************/
-var tableTemplate = function(){ return '<table data-bind="attr: { class: tableClasses }" ><thead><tr data-bind="foreach: columns"><th scope="col" data-bind="text: headerText"></th></tr></thead><tbody data-bind="foreach: itemsOnCurrentPage"><tr data-bind="foreach: $parent.columns"><td data-bind="text: typeof rowText == \'function\' ? rowText($parent) : $parent[rowText] "></td></tr></tbody></table>';};
+var tableTemplate = function(){ return '<table data-bind="attr: { class: tableClasses }" ><thead><tr data-bind="foreach: columns"><th scope="col" data-bind="text: headerText"></th></tr></thead><tbody data-bind="foreach: currentItems"><tr data-bind="foreach: $parent.columns"><td data-bind="text: typeof rowText == \'function\' ? rowText($parent) : $parent[rowText] "></td></tr></tbody></table>';};
 
 /***********************************************
-* FILE: ..\src\components\datagrid-table.js 
+* FILE: ..\src\components\datagrid-table.js
 ***********************************************/
 ko.components.register("datagrid", {
   template: tableTemplate(),
-  viewModel: function (configuration) {
-    this.data = configuration.data;
-    this.tableClasses = ko.observable("table " + (configuration.tableClasses || ""));
+  viewModel: function (params) {
+    var self = this;
+    self.data = params.data;
+    self.tableClasses = ko.observable("table " + (params.tableClasses || ""));
+    self.columns = ko.observableArray([]);
+    self.currentItems = ko.pureComputed(function () {
+      return ko.unwrap(this.data);
+    }, this);
+    self.data.subscribe(function (newData) {
+      var c = params.columns || self.getColumnsForScaffolding(ko.unwrap(self.data))
+      self.columns(c);
+    });
     this.getColumnsForScaffolding = function (data) {
       if ((typeof data.length !== 'number') || data.length === 0) {
         return [];
@@ -31,8 +40,8 @@ ko.components.register("datagrid", {
       }
       return columns;
     }
-    // If you don't specify columns configuration, we'll use scaffolding
-    this.columns = configuration.columns || this.getColumnsForScaffolding(ko.unwrap(this.data));
+    // If you don't specify columns params, we'll use scaffolding
+    // self.columns = params.columns || self.getColumnsForScaffolding(ko.unwrap(self.data));
   }
 });
 
@@ -46,20 +55,30 @@ var pagerTemplate = function(){ return '<nav aria-label="Table Page Navigation">
 ***********************************************/
 ko.components.register("pager" , {
   template: pagerTemplate(),
-  viewModel: function (configuration) {
-    this.data = configuration.data;
-    this.pagerClasses = ko.observable("pagination " + (configuration.tableClasses || ""));
-    this.currentPageIndex = ko.observable(0);
-    this.pageSize = configuration.pageSize || 5;
-    this.previousPage = function () {
-      var currIndex = this.currentPageIndex() - 1;
-      this.currentPageIndex(currIndex);
+  viewModel: function (param) {
+    var self = this;
+/* Parameters *******************************/
+    self.data = param.data;
+    self.pageItems = param.pageItems;
+    self.tableClasses = param.tableClasses;
+/********************************************/
+    self.pagerClasses = ko.observable("pagination " + (self.tableClasses || ""));
+    self.currentPageIndex = ko.observable(0);
+    self.pageSize = param.pageSize || 5;
+    self.previousPage = function () {
+      var currIndex = self.currentPageIndex() - 1;
+      self.currentPageIndex(currIndex);
+      self.pageItems(self.itemsOnCurrentPage());
     }
-    this.nextPage = function () {
-      var currIndex = this.currentPageIndex() + 1;
-      this.currentPageIndex(currIndex);
+    self.currentPageIndex.subscribe(function (newIdx) {
+      self.pageItems(self.itemsOnCurrentPage());
+    });
+    self.nextPage = function () {
+      var currIndex = self.currentPageIndex() + 1;
+      self.currentPageIndex(currIndex);
+      self.pageItems(self.itemsOnCurrentPage());
     }
-    this.minRange = ko.pureComputed(function () {
+    self.minRange = ko.pureComputed(function () {
       return (this.currentPageIndex() - 2) < 0 ? 0 : (this.currentPageIndex() - 2);
     }, this);
 
@@ -67,14 +86,16 @@ ko.components.register("pager" , {
       return (this.currentPageIndex() + 2) > this.maxPageIndex() ? this.maxPageIndex() : this.currentPageIndex() + 2;
     }, this);
 
-    this.itemsOnCurrentPage = ko.pureComputed(function () {
-      var startIndex = this.pageSize * this.currentPageIndex();
-      return ko.unwrap(this.data).slice(startIndex, startIndex + this.pageSize);
-    }, this);
+    self.itemsOnCurrentPage = function () {
+      var startIndex = self.pageSize * self.currentPageIndex();
+      return ko.unwrap(self.data).slice(startIndex, startIndex + self.pageSize);
+    };
 
     this.maxPageIndex = ko.pureComputed(function () {
       return Math.ceil(ko.unwrap(this.data).length / this.pageSize) - 1;
     }, this);
+
+    self.pageItems(self.itemsOnCurrentPage());
   }
 });
 })(ko);
