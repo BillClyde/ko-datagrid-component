@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Knockout.Datagrid</id>
+    <version>0.0.1</version>
+    <authors>billclyde</authors>
+    <owners>billclyde</owners>
+    <licenseUrl>http://www.opensource.org/licenses/mit-license.php</licenseUrl>
+    <projectUrl>https://github.com/BillClyde/ko-datagrid-component</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A high-performance KnockoutJS DataGrid.
+Knockout Datagrid is based on the live example in the Knockout Tutorials.</description>
+    <releaseNotes>Initial Release</releaseNotes>
+    <copyright>Copyright 2018</copyright>
+    <tags>knockoutjs javascript jquery datagrid</tags>
+    <dependencies>
+      <dependency id="knockoutjs" version="3.0" />
+      <dependency id="bootstrap" version="4.0" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="..\ko-datagrid-*.js" target="content\Scripts" />
+  </files>
+</package>
