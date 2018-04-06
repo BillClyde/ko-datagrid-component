@@ -2,7 +2,7 @@
 * datagrid-component JavaScript Library
 * Authors: https://github.com/billclyde/datagrid-component/blob/master/README.md
 * License: MIT (http://www.opensource.org/licenses/mit-license.php)
-* Compiled At: 04/04/2018 15:44:39
+* Compiled At: 04/06/2018 10:58:54
 ***********************************************/
 
 (function (ko) {
@@ -11,7 +11,7 @@
 /***********************************************
 * FILE: ..\src\templates\datagrid-table.html
 ***********************************************/
-var tableTemplate = function(){ return '<table data-bind="attr: { class: tableClasses }" ><thead><tr data-bind="foreach: columns"><th scope="col" data-bind="text: headerText"></th></tr></thead><tbody data-bind="foreach: currentItems"><tr data-bind="foreach: $parent.columns"><td data-bind="text: typeof rowText == \'function\' ? rowText($parent) : $parent[rowText] "></td></tr></tbody></table>';};
+var tableTemplate = function(){ return '<table data-bind="attr: { class: tableClasses }" ><thead><tr data-bind="foreach: columns"><th scope="col" data-bind="text: headerText"></th></tr></thead><tbody data-bind="foreach: data"><tr data-bind="foreach: $parent.columns"><td data-bind="text: typeof rowText == \'function\' ? rowText($parent) : $parent[rowText] "></td></tr></tbody></table>';};
 
 /***********************************************
 * FILE: ..\src\components\datagrid-table.js
@@ -22,15 +22,7 @@ ko.components.register("datagrid", {
     var self = this;
     self.data = params.data;
     self.tableClasses = ko.observable("table " + (params.tableClasses || ""));
-    self.columns = ko.observableArray([]);
-    self.currentItems = ko.pureComputed(function () {
-      return ko.unwrap(this.data);
-    }, this);
-    self.data.subscribe(function (newData) {
-      var c = params.columns || self.getColumnsForScaffolding(ko.unwrap(self.data))
-      self.columns(c);
-    });
-    this.getColumnsForScaffolding = function (data) {
+    self.getColumnsForScaffolding = function (data) {
       if ((typeof data.length !== 'number') || data.length === 0) {
         return [];
       }
@@ -40,6 +32,7 @@ ko.components.register("datagrid", {
       }
       return columns;
     }
+    self.columns = ko.observableArray(params.columns || self.getColumnsForScaffolding(ko.unwrap(self.data)));
     // If you don't specify columns params, we'll use scaffolding
     // self.columns = params.columns || self.getColumnsForScaffolding(ko.unwrap(self.data));
   }
@@ -48,7 +41,7 @@ ko.components.register("datagrid", {
 /***********************************************
 * FILE: ..\src\templates\datagrid-pager.html 
 ***********************************************/
-var pagerTemplate = function(){ return '<nav aria-label="Table Page Navigation"><ul class="pagination"><li data-bind="attr: {class: \'page-item \'+ (currentPageIndex() === 0 ? \'disabled\' : \'\') } "><a class="page-link" href="#" data-bind="click: previousPage ">Previous</a></li><!-- ko foreach: ko.utils.range(minRange, maxRange) --><li data-bind="attr: {class: \'page-item \' + ($data == $parent.currentPageIndex() ? \'active\' : \'\')}"><a class="page-link"href="#"data-bind="text: $data + 1,click: function() { $parent.currentPageIndex($data) }"></a></li><!-- /ko --><li data-bind="attr: {class: \'page-item \'+ (currentPageIndex() === maxPageIndex() ? \'disabled\' : \'\')}"><a class="page-link" href="#" data-bind="click: nextPage ">Next</a></li></ul></nav>';};
+var pagerTemplate = function(){ return '<!-- ko template: {nodes: $componentTemplateNodes} --><!-- /ko --><nav aria-label="Table Page Navigation"><ul class="pagination"><li data-bind="attr: {class: \'page-item \'+ (currentPageIndex() === 0 ? \'disabled\' : \'\') } "><a class="page-link" href="#" data-bind="click: previousPage ">Previous</a></li><!-- ko foreach: ko.utils.range(minRange, maxRange) --><li data-bind="attr: {class: \'page-item \' + ($data == $parent.currentPageIndex() ? \'active\' : \'\')}"><a class="page-link"href="#"data-bind="text: $data + 1,click: function() { $parent.currentPageIndex($data) }"></a></li><!-- /ko --><li data-bind="attr: {class: \'page-item \'+ (currentPageIndex() === maxPageIndex() ? \'disabled\' : \'\')}"><a class="page-link" href="#" data-bind="click: nextPage ">Next</a></li></ul></nav>';};
 
 /***********************************************
 * FILE: ..\src\components\datagrid-pager.js
@@ -59,12 +52,12 @@ ko.components.register("pager" , {
     var self = this;
 /* Parameters *******************************/
     self.data = param.data;
-    self.pageItems = param.pageItems;
     self.tableClasses = param.tableClasses;
+    self.pageSize = param.pageSize || 5;
 /********************************************/
     self.pagerClasses = ko.observable("pagination " + (self.tableClasses || ""));
+    self.pageItems = ko.observableArray([]);
     self.currentPageIndex = ko.observable(0);
-    self.pageSize = param.pageSize || 5;
     self.previousPage = function () {
       var currIndex = self.currentPageIndex() - 1;
       self.currentPageIndex(currIndex);

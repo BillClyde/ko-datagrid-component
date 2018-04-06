@@ -4,12 +4,12 @@ ko.components.register("pager" , {
     var self = this;
 /* Parameters *******************************/
     self.data = param.data;
-    self.pageItems = param.pageItems;
     self.tableClasses = param.tableClasses;
+    self.pageSize = param.pageSize || 5;
 /********************************************/
     self.pagerClasses = ko.observable("pagination " + (self.tableClasses || ""));
+    self.pageItems = ko.observableArray([]);
     self.currentPageIndex = ko.observable(0);
-    self.pageSize = param.pageSize || 5;
     self.previousPage = function () {
       var currIndex = self.currentPageIndex() - 1;
       self.currentPageIndex(currIndex);

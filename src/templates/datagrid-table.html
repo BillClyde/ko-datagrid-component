@@ -5,7 +5,7 @@
       <th scope="col" data-bind="text: headerText"></th>
     </tr>
   </thead>
-  <tbody data-bind="foreach: currentItems">
+  <tbody data-bind="foreach: data">
     <tr data-bind="foreach: $parent.columns">
       <td data-bind="text: typeof rowText == 'function' ? rowText($parent) : $parent[rowText] "></td>
     </tr>

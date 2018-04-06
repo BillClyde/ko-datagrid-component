@@ -4,15 +4,7 @@ ko.components.register("datagrid", {
     var self = this;
     self.data = params.data;
     self.tableClasses = ko.observable("table " + (params.tableClasses || ""));
-    self.columns = ko.observableArray([]);
-    self.currentItems = ko.pureComputed(function () {
-      return ko.unwrap(this.data);
-    }, this);
-    self.data.subscribe(function (newData) {
-      var c = params.columns || self.getColumnsForScaffolding(ko.unwrap(self.data))
-      self.columns(c);
-    });
-    this.getColumnsForScaffolding = function (data) {
+    self.getColumnsForScaffolding = function (data) {
       if ((typeof data.length !== 'number') || data.length === 0) {
         return [];
       }
@@ -22,6 +14,7 @@ ko.components.register("datagrid", {
       }
       return columns;
     }
+    self.columns = ko.observableArray(params.columns || self.getColumnsForScaffolding(ko.unwrap(self.data)));
     // If you don't specify columns params, we'll use scaffolding
     // self.columns = params.columns || self.getColumnsForScaffolding(ko.unwrap(self.data));
   }
