@@ -1,20 +1,36 @@
 <!--pagerTemplate-->
 <!-- ko template: {nodes: $componentTemplateNodes} --><!-- /ko -->
-<nav aria-label="Table Page Navigation">
-  <ul class="pagination">
-    <li data-bind="attr: {class: 'page-item '+ (currentPageIndex() === 0 ? 'disabled' : '') } ">
-      <a class="page-link" href="#" data-bind="click: previousPage ">Previous</a>
-    </li>
-    <!-- ko foreach: ko.utils.range(minRange, maxRange) -->
-    <li data-bind="attr: {class: 'page-item ' + ($data == $parent.currentPageIndex() ? 'active' : '')}">
-      <a class="page-link" 
-         href="#" 
-         data-bind="text: $data + 1, 
-         click: function() { $parent.currentPageIndex($data) }"></a>
-    </li>
-    <!-- /ko -->
-    <li data-bind="attr: {class: 'page-item '+ (currentPageIndex() === maxPageIndex() ? 'disabled' : '')}">
-      <a class="page-link" href="#" data-bind="click: nextPage ">Next</a>
-    </li>
-  </ul>
-</nav>
+<div class="row">
+  <div class="col">
+    <nav aria-label="Table Page Navigation">
+      <ul class="pagination">
+        <li data-bind="attr: {class: 'page-item '+ (currentPageIndex() === 0 ? 'disabled' : '') } ">
+          <a class="page-link" href="#" data-bind="click: previousPage ">Prev</a>
+        </li>
+        <li data-bind="visible: atFirstIndex">
+          <a href="#"  
+             class="page-link" 
+             data-bind="click: function () { currentPageIndex(0) }, text: '1'"></a>
+        </li>
+        <li data-bind="visible: atSecondIndex"><button type="button" class="btn btn-default" disabled data-bind="text: '&hellip;'"></button></li>
+        <!-- ko foreach: ko.utils.range(minRange, maxRange) -->
+        <li data-bind="attr: {class: 'page-item ' + ($data == $parent.currentPageIndex() ? 'active' : '')}">
+          <a class="page-link" 
+             href="#" 
+             data-bind="text: $data + 1, 
+             click: function() { $parent.currentPageIndex($data) }"></a>
+        </li>
+        <!-- /ko -->
+        <li><button type="button" class="btn btn-default" disabled data-bind="text: '&hellip;'"></button></li>
+        <li data-bind="attr: {class: 'page-item '+ (currentPageIndex() === maxPageIndex() ? 'disabled' : '')}">
+          <a class="page-link" href="#" data-bind="click: nextPage ">Next</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+  <div class="col">
+    <div class="btn-group float-right" role="group" data-bind="foreach: pageSizes">
+      <button type="button" class ="btn btn-default" data-bind="click: function() { $parent.setPageSize($data) }, text: $data"></button>
+    </div>
+  </div>
+</div>

@@ -2,7 +2,7 @@
 * datagrid-component JavaScript Library
 * Authors: https://github.com/billclyde/datagrid-component/blob/master/README.md
 * License: MIT (http://www.opensource.org/licenses/mit-license.php)
-* Compiled At: 04/06/2018 10:58:54
+* Compiled At: 04/06/2018 16:51:23
 ***********************************************/
 
 (function (ko) {
@@ -41,7 +41,7 @@ ko.components.register("datagrid", {
 /***********************************************
 * FILE: ..\src\templates\datagrid-pager.html 
 ***********************************************/
-var pagerTemplate = function(){ return '<!-- ko template: {nodes: $componentTemplateNodes} --><!-- /ko --><nav aria-label="Table Page Navigation"><ul class="pagination"><li data-bind="attr: {class: \'page-item \'+ (currentPageIndex() === 0 ? \'disabled\' : \'\') } "><a class="page-link" href="#" data-bind="click: previousPage ">Previous</a></li><!-- ko foreach: ko.utils.range(minRange, maxRange) --><li data-bind="attr: {class: \'page-item \' + ($data == $parent.currentPageIndex() ? \'active\' : \'\')}"><a class="page-link"href="#"data-bind="text: $data + 1,click: function() { $parent.currentPageIndex($data) }"></a></li><!-- /ko --><li data-bind="attr: {class: \'page-item \'+ (currentPageIndex() === maxPageIndex() ? \'disabled\' : \'\')}"><a class="page-link" href="#" data-bind="click: nextPage ">Next</a></li></ul></nav>';};
+var pagerTemplate = function(){ return '<!-- ko template: {nodes: $componentTemplateNodes} --><!-- /ko --><div class="row"><div class="col"><nav aria-label="Table Page Navigation"><ul class="pagination"><li data-bind="attr: {class: \'page-item \'+ (currentPageIndex() === 0 ? \'disabled\' : \'\') } "><a class="page-link" href="#" data-bind="click: previousPage ">Prev</a></li><li data-bind="visible: atFirstIndex"><a href="#"class="page-link"data-bind="click: function () { currentPageIndex(0) }, text: \'1\'"></a></li><li data-bind="visible: atSecondIndex"><button type="button" class="btn btn-default" disabled data-bind="text: \'&hellip;\'"></button></li><!-- ko foreach: ko.utils.range(minRange, maxRange) --><li data-bind="attr: {class: \'page-item \' + ($data == $parent.currentPageIndex() ? \'active\' : \'\')}"><a class="page-link"href="#"data-bind="text: $data + 1,click: function() { $parent.currentPageIndex($data) }"></a></li><!-- /ko --><li><button type="button" class="btn btn-default" disabled data-bind="text: \'&hellip;\'"></button></li><li data-bind="attr: {class: \'page-item \'+ (currentPageIndex() === maxPageIndex() ? \'disabled\' : \'\')}"><a class="page-link" href="#" data-bind="click: nextPage ">Next</a></li></ul></nav></div><div class="col"><div class="btn-group float-right" role="group" data-bind="foreach: pageSizes"><button type="button" class ="btn btn-default" data-bind="click: function() { $parent.setPageSize($data) }, text: $data"></button></div></div></div>';};
 
 /***********************************************
 * FILE: ..\src\components\datagrid-pager.js
@@ -53,7 +53,8 @@ ko.components.register("pager" , {
 /* Parameters *******************************/
     self.data = param.data;
     self.tableClasses = param.tableClasses;
-    self.pageSize = param.pageSize || 5;
+    self.pageSize = param.pageSize || ko.observable(5);
+    self.pageSizes = param.pageSizes || ko.observableArray([5, 10, 15]);
 /********************************************/
     self.pagerClasses = ko.observable("pagination " + (self.tableClasses || ""));
     self.pageItems = ko.observableArray([]);
@@ -71,22 +72,38 @@ ko.components.register("pager" , {
       self.currentPageIndex(currIndex);
       self.pageItems(self.itemsOnCurrentPage());
     }
+    self.setPageSize = function (data) {
+      self.pageSize(data);
+      self.pageItems(self.itemsOnCurrentPage());
+    };
     self.minRange = ko.pureComputed(function () {
-      return (this.currentPageIndex() - 2) < 0 ? 0 : (this.currentPageIndex() - 2);
-    }, this);
+      return (self.currentPageIndex() - 2) < 0 ? 0 : (self.currentPageIndex() - 2);
+    });
 
-    this.maxRange = ko.pureComputed(function () {
-      return (this.currentPageIndex() + 2) > this.maxPageIndex() ? this.maxPageIndex() : this.currentPageIndex() + 2;
-    }, this);
+    self.maxRange = ko.pureComputed(function () {
+      return self.minRange() + 4;
+    });
 
     self.itemsOnCurrentPage = function () {
-      var startIndex = self.pageSize * self.currentPageIndex();
-      return ko.unwrap(self.data).slice(startIndex, startIndex + self.pageSize);
+      var startIndex = self.pageSize() * self.currentPageIndex();
+      return ko.unwrap(self.data).slice(startIndex, startIndex + self.pageSize());
     };
 
-    this.maxPageIndex = ko.pureComputed(function () {
-      return Math.ceil(ko.unwrap(this.data).length / this.pageSize) - 1;
-    }, this);
+    self.maxPageIndex = ko.pureComputed(function () {
+      return Math.ceil(ko.unwrap(self.data).length / self.pageSize()) - 1;
+    });
+
+    self.atFirstIndex = ko.pureComputed(function () { 
+      return self.minRange() >= 1;
+    });
+
+    self.atSecondIndex = ko.pureComputed(function () { 
+      return self.minRange() >= 2;
+    });
+
+    self.atLastIndex = ko.pureComputed(function () {
+      return self.maxRange === self.maxPageIndex;
+    });
 
     self.pageItems(self.itemsOnCurrentPage());
   }
