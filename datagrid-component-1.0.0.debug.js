@@ -2,7 +2,7 @@
 * datagrid-component JavaScript Library
 * Authors: https://github.com/billclyde/datagrid-component/blob/master/README.md
 * License: MIT (http://www.opensource.org/licenses/mit-license.php)
-* Compiled At: 04/06/2018 16:51:23
+* Compiled At: 04/08/2018 10:15:59
 ***********************************************/
 
 (function (ko) {
@@ -39,7 +39,7 @@ ko.components.register("datagrid", {
 });
 
 /***********************************************
-* FILE: ..\src\templates\datagrid-pager.html 
+* FILE: ..\src\templates\datagrid-pager.html
 ***********************************************/
 var pagerTemplate = function(){ return '<!-- ko template: {nodes: $componentTemplateNodes} --><!-- /ko --><div class="row"><div class="col"><nav aria-label="Table Page Navigation"><ul class="pagination"><li data-bind="attr: {class: \'page-item \'+ (currentPageIndex() === 0 ? \'disabled\' : \'\') } "><a class="page-link" href="#" data-bind="click: previousPage ">Prev</a></li><li data-bind="visible: atFirstIndex"><a href="#"class="page-link"data-bind="click: function () { currentPageIndex(0) }, text: \'1\'"></a></li><li data-bind="visible: atSecondIndex"><button type="button" class="btn btn-default" disabled data-bind="text: \'&hellip;\'"></button></li><!-- ko foreach: ko.utils.range(minRange, maxRange) --><li data-bind="attr: {class: \'page-item \' + ($data == $parent.currentPageIndex() ? \'active\' : \'\')}"><a class="page-link"href="#"data-bind="text: $data + 1,click: function() { $parent.currentPageIndex($data) }"></a></li><!-- /ko --><li><button type="button" class="btn btn-default" disabled data-bind="text: \'&hellip;\'"></button></li><li data-bind="attr: {class: \'page-item \'+ (currentPageIndex() === maxPageIndex() ? \'disabled\' : \'\')}"><a class="page-link" href="#" data-bind="click: nextPage ">Next</a></li></ul></nav></div><div class="col"><div class="btn-group float-right" role="group" data-bind="foreach: pageSizes"><button type="button" class ="btn btn-default" data-bind="click: function() { $parent.setPageSize($data) }, text: $data"></button></div></div></div>';};
 
@@ -81,7 +81,7 @@ ko.components.register("pager" , {
     });
 
     self.maxRange = ko.pureComputed(function () {
-      return self.minRange() + 4;
+      return self.minRange + 4;
     });
 
     self.itemsOnCurrentPage = function () {
