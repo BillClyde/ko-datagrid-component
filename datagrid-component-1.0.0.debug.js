@@ -2,7 +2,7 @@
 * datagrid-component JavaScript Library
 * Authors: https://github.com/billclyde/datagrid-component/blob/master/README.md
 * License: MIT (http://www.opensource.org/licenses/mit-license.php)
-* Compiled At: 04/08/2018 10:15:59
+* Compiled At: 04/08/2018 10:34:43
 ***********************************************/
 
 (function (ko) {
@@ -81,7 +81,15 @@ ko.components.register("pager" , {
     });
 
     self.maxRange = ko.pureComputed(function () {
-      return self.minRange + 4;
+      var max;
+      if (self.atSecondIndex()){
+        max = self.minRange() + 3;
+      } else if (self.atFirstIndex()){
+        max = self.minRange() + 2;
+      } else {
+        max = self.minRange() + 4;
+      }
+      return max;
     });
 
     self.itemsOnCurrentPage = function () {

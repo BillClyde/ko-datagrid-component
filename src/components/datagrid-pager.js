@@ -33,7 +33,15 @@ ko.components.register("pager" , {
     });
 
     self.maxRange = ko.pureComputed(function () {
-      return self.minRange() + 4;
+      var max;
+      if (self.atSecondIndex()){
+        max = self.minRange() + 3;
+      } else if (self.atFirstIndex()){
+        max = self.minRange() + 2;
+      } else {
+        max = self.minRange() + 4;
+      }
+      return max;
     });
 
     self.itemsOnCurrentPage = function () {
