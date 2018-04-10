@@ -29,18 +29,17 @@ ko.components.register("pager" , {
       self.pageItems(self.itemsOnCurrentPage());
     };
     self.minRange = ko.pureComputed(function () {
-      return (self.currentPageIndex() - 2) < 0 ? 0 : (self.currentPageIndex() - 2);
+      var min;
+      if ((self.currentPageIndex() + 4) > self.maxPageIndex()) {
+        console.log("Reaching Max");
+      }
+      min = (self.currentPageIndex() - 2) < 0 ? 0 : (self.currentPageIndex() - 2);
+      return min
     });
 
     self.maxRange = ko.pureComputed(function () {
       var max;
-      if (self.atSecondIndex()){
-        max = self.minRange() + 3;
-      } else if (self.atFirstIndex()){
-        max = self.minRange() + 2;
-      } else {
-        max = self.minRange() + 4;
-      }
+      max = self.currentPageIndex() === 3 ? self.minRange() + 3 : self.minRange() + 4;
       return max;
     });
 
@@ -62,7 +61,11 @@ ko.components.register("pager" , {
     });
 
     self.atLastIndex = ko.pureComputed(function () {
-      return self.maxRange === self.maxPageIndex;
+      return self.maxRange() <= self.maxPageIndex() - 1;
+    });
+
+    self.atSecondLastIndex = ko.pureComputed(function () {
+      return self.maxRange() <= self.maxPageIndex() - 2;
     });
 
     self.pageItems(self.itemsOnCurrentPage());

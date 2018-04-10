@@ -21,7 +21,11 @@
              click: function() { $parent.currentPageIndex($data) }"></a>
         </li>
         <!-- /ko -->
-        <li><button type="button" class="btn btn-default" disabled data-bind="text: '&hellip;'"></button></li>
+        <li data-bind="visible: atLastIndex"><button type="button" class="btn btn-default" disabled data-bind="text: '&hellip;'"></button></li>
+        <li data-bind="visible: atSecondLastIndex"><a href="#"
+                    class="page-link" 
+                    data-bind="text: maxPageIndex() + 1, 
+                               click: function(){currentPageIndex(maxPageIndex())}"></a></li>
         <li data-bind="attr: {class: 'page-item '+ (currentPageIndex() === maxPageIndex() ? 'disabled' : '')}">
           <a class="page-link" href="#" data-bind="click: nextPage ">Next</a>
         </li>
