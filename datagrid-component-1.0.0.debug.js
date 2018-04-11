@@ -2,7 +2,7 @@
 * datagrid-component JavaScript Library
 * Authors: https://github.com/billclyde/datagrid-component/blob/master/README.md
 * License: MIT (http://www.opensource.org/licenses/mit-license.php)
-* Compiled At: 04/11/2018 11:34:21
+* Compiled At: 04/11/2018 16:04:56
 ***********************************************/
 
 (function (ko) {
@@ -11,7 +11,7 @@
 /***********************************************
 * FILE: ..\src\templates\datagrid-table.html
 ***********************************************/
-var tableTemplate = function(){ return '<table data-bind="attr: { class: tableClasses }" ><thead><tr data-bind="foreach: columns"><th scope="col" data-bind="text: headerText"></th></tr></thead><tbody data-bind="foreach: data"><tr data-bind="foreach: $parent.columns"><td data-bind="text: typeof rowText == \'function\' ? rowText($parent) : $parent[rowText] "></td></tr></tbody></table>';};
+var tableTemplate = function(){ return '<table data-bind="attr: { class: tableClasses }" ><thead><tr data-bind="foreach: columns"><!-- ko if: $data.sort --><th scope="col" data-bind="click: sort"><!-- ko text: headerText --><!-- /ko --><span class="fas fa-sort"></span></th><!-- /ko --><!-- ko ifnot: $data.sort --><th scope="col" data-bind="text: headerText"></th><!-- /ko --></tr></thead><tbody data-bind="foreach: data"><tr data-bind="foreach: $parent.columns"><td data-bind="text: typeof rowText == \'function\' ? rowText($parent) : $parent[rowText] "></td></tr></tbody></table>';};
 
 /***********************************************
 * FILE: ..\src\components\datagrid-table.js

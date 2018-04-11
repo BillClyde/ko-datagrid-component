@@ -14,6 +14,8 @@ ko.components.register("datagrid", {
       }
       return columns;
     }
+    self.sort = function () {
+    }
     self.columns = ko.observableArray(params.columns || self.getColumnsForScaffolding(ko.unwrap(self.data)));
     // If you don't specify columns params, we'll use scaffolding
     // self.columns = params.columns || self.getColumnsForScaffolding(ko.unwrap(self.data));
