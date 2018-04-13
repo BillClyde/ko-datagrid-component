@@ -2,7 +2,7 @@
 * datagrid-component JavaScript Library
 * Authors: https://github.com/billclyde/datagrid-component/blob/master/README.md
 * License: MIT (http://www.opensource.org/licenses/mit-license.php)
-* Compiled At: 04/12/2018 16:51:34
+* Compiled At: 04/13/2018 09:37:23
 ***********************************************/
 
 (function (ko) {
@@ -11,7 +11,7 @@
 /***********************************************
 * FILE: ..\src\templates\datagrid-table.html
 ***********************************************/
-var tableTemplate = function(){ return '<table data-bind="attr: { class: tableClasses }" ><thead><tr data-bind="foreach: columns"><!-- ko if: $data.sort --><th scope="col" data-bind="click: $parent.sort.bind(rowText)"><!-- ko text: headerText --><!-- /ko --><!-- ko if: $data.unsorted --><span>&harr;</span><!-- /ko --><!-- ko if: $data.sortedUp --><span>&uarr;</span><!-- /ko --><!-- ko if: $data.sortedDown --><span>&darr;</span><!-- /ko --></th><!-- /ko --><!-- ko ifnot: $data.sort --><th scope="col" data-bind="text: headerText"></th><!-- /ko --></tr></thead><tbody data-bind="foreach: data"><tr data-bind="foreach: $parent.columns"><td data-bind="text: typeof rowText == \'function\' ? rowText($parent) : $parent[rowText] "></td></tr></tbody></table>';};
+var tableTemplate = function(){ return '<table data-bind="attr: { class: tableClasses }" ><thead><tr data-bind="foreach: columns"><!-- ko if: $data.sort --><th scope="col" data-bind="click: $parent.sort.bind(rowText)"style="cursor: pointer;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;"><div class="row text-nowrap"><div class="col text-left" data-bind="text: headerText" ></div><!-- ko if: $data.unsorted --><div class="col text-right">&uarr;&darr;</div><!-- /ko --><!-- ko if: $data.sortedUp --><div class="col text-right">&nbsp;&uarr;</div><!-- /ko --><!-- ko if: $data.sortedDown --><div class="col text-right">&nbsp;&darr;</div><!-- /ko --></div></th><!-- /ko --><!-- ko ifnot: $data.sort --><th scope="col" data-bind="text: headerText"></th><!-- /ko --></tr></thead><tbody data-bind="foreach: data"><tr data-bind="foreach: $parent.columns"><td data-bind="text: typeof rowText == \'function\' ? rowText($parent) : $parent[rowText] "></td></tr></tbody></table>';};
 
 /***********************************************
 * FILE: ..\src\components\datagrid-table.js

@@ -3,16 +3,24 @@
   <thead>
     <tr data-bind="foreach: columns">
       <!-- ko if: $data.sort -->
-    <th scope="col" data-bind="click: $parent.sort.bind(rowText)"><!-- ko text: headerText --><!-- /ko -->
+    <th scope="col" data-bind="click: $parent.sort.bind(rowText)" 
+                    style="cursor: pointer; 
+                           -webkit-user-select: none;
+                           -moz-user-select: none;
+                           -ms-user-select: none;
+                           user-select: none;">
+      <div class="row text-nowrap">
+      <div class="col text-left" data-bind="text: headerText" ></div>
       <!-- ko if: $data.unsorted -->
-      <span>&harr;</span>
+      <div class="col text-right">&uarr;&darr;</div>
       <!-- /ko -->
       <!-- ko if: $data.sortedUp -->
-      <span>&uarr;</span>
+      <div class="col text-right">&nbsp;&uarr;</div>
       <!-- /ko -->
       <!-- ko if: $data.sortedDown -->
-      <span>&darr;</span>
+      <div class="col text-right">&nbsp;&darr;</div>
       <!-- /ko -->
+      </div>
     </th>
       <!-- /ko -->
       <!-- ko ifnot: $data.sort -->
