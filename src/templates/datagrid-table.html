@@ -3,7 +3,17 @@
   <thead>
     <tr data-bind="foreach: columns">
       <!-- ko if: $data.sort -->
-    <th scope="col" data-bind="click: sort"><!-- ko text: headerText --><!-- /ko --><span class="fas fa-sort"></span></th>
+    <th scope="col" data-bind="click: $parent.sort.bind(rowText)"><!-- ko text: headerText --><!-- /ko -->
+      <!-- ko if: $data.unsorted -->
+      <span>&harr;</span>
+      <!-- /ko -->
+      <!-- ko if: $data.sortedUp -->
+      <span>&uarr;</span>
+      <!-- /ko -->
+      <!-- ko if: $data.sortedDown -->
+      <span>&darr;</span>
+      <!-- /ko -->
+    </th>
       <!-- /ko -->
       <!-- ko ifnot: $data.sort -->
       <th scope="col" data-bind="text: headerText"></th>
