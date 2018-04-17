@@ -2,7 +2,7 @@
 * datagrid-component JavaScript Library
 * Authors: https://github.com/billclyde/datagrid-component/blob/master/README.md
 * License: MIT (http://www.opensource.org/licenses/mit-license.php)
-* Compiled At: 04/13/2018 09:37:23
+* Compiled At: 04/16/2018 16:54:56
 ***********************************************/
 
 (function (ko) {
@@ -25,6 +25,9 @@ ko.components.register("datagrid", {
     self.unsorted = ko.observable(true);
     self.sortedUp = ko.observable(false);
     self.sortedDown = ko.observable(false);
+    self.data.subscribe(function (newValue) {
+      console.log('Data Updated');
+    });
 
     var getColumnsForScaffolding = function (data) {
       if ((typeof data.length !== 'number') || data.length === 0) {
@@ -84,11 +87,11 @@ ko.components.register("pager" , {
     var self = this;
 /* Parameters *******************************/
     self.data = param.data;
-    self.tableClasses = param.tableClasses;
+    self.pagerClasses = param.pagerClasses;
     self.pageSize = param.pageSize || ko.observable(5);
     self.pageSizes = param.pageSizes || ko.observableArray([5, 10, 15]);
 /********************************************/
-    self.pagerClasses = ko.observable("pagination " + (self.tableClasses || ""));
+    self.pagerClasses = ko.observable("pagination " + (self.pagerClasses || ""));
     self.pageItems = ko.observableArray([]);
     self.currentPageIndex = ko.observable(0);
 
@@ -161,7 +164,49 @@ ko.components.register("pager" , {
       return self.maxRange() <= self.maxPageIndex() - 2;
     });
 
+    self.data.subscribe(function (d) {
+      self.pageItems(self.itemsOnCurrentPage());
+    });
+
     self.pageItems(self.itemsOnCurrentPage());
+  }
+});
+
+/***********************************************
+* FILE: ..\src\templates\datagrid-filter.html
+***********************************************/
+var filterTemplate = function(){ return '<input class="form-control" id="searchInput" data-bind="textInput: filterValue" type="text" placeholder="Search&hellip;" /><!-- ko template: {nodes: $componentTemplateNodes} --><!-- /ko -->';};
+
+/***********************************************
+* FILE: ..\src\components\datagrid-filter.js
+***********************************************/
+ko.components.register("filter", {
+  template: filterTemplate(),
+  viewModel: function(param) {
+    var self = this;
+    /* Parameters *************************/
+    self.data = param.data;
+    /**************************************/
+    self.filterValue = ko.observable();
+    self.filteredData =ko.observableArray(self.data());
+    self.filterValue.subscribe(function (newValue) {
+      self.filteredData(self.dataFilter(newValue));
+    });
+
+    self.dataFilter = function (searchTerm) {
+      var resultList = [];
+      var found = [];
+      searchTerm = (searchTerm || '').toLowerCase();
+      for (var item in self.data()){
+        for(var idx in self.data()[item]){
+          if((self.data()[item][idx] || '').toLowerCase().search(searchTerm)>-1 && found.indexOf(item) === -1){
+            resultList.push(self.data()[item]);
+            found.push(item);
+          }
+        }
+      }
+      return resultList;
+    }
   }
 });
 })(ko);

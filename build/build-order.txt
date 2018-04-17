@@ -2,3 +2,5 @@
 ..\src\components\datagrid-table.js
 ..\src\templates\datagrid-pager.html
 ..\src\components\datagrid-pager.js
+..\src\templates\datagrid-filter.html
+..\src\components\datagrid-filter.js

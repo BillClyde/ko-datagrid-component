@@ -4,11 +4,11 @@ ko.components.register("pager" , {
     var self = this;
 /* Parameters *******************************/
     self.data = param.data;
-    self.tableClasses = param.tableClasses;
+    self.pagerClasses = param.pagerClasses;
     self.pageSize = param.pageSize || ko.observable(5);
     self.pageSizes = param.pageSizes || ko.observableArray([5, 10, 15]);
 /********************************************/
-    self.pagerClasses = ko.observable("pagination " + (self.tableClasses || ""));
+    self.pagerClasses = ko.observable("pagination " + (self.pagerClasses || ""));
     self.pageItems = ko.observableArray([]);
     self.currentPageIndex = ko.observable(0);
 
@@ -79,6 +79,10 @@ ko.components.register("pager" , {
 
     self.atSecondLastIndex = ko.pureComputed(function () {
       return self.maxRange() <= self.maxPageIndex() - 2;
+    });
+
+    self.data.subscribe(function (d) {
+      self.pageItems(self.itemsOnCurrentPage());
     });
 
     self.pageItems(self.itemsOnCurrentPage());

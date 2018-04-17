@@ -7,6 +7,9 @@ ko.components.register("datagrid", {
     self.unsorted = ko.observable(true);
     self.sortedUp = ko.observable(false);
     self.sortedDown = ko.observable(false);
+    self.data.subscribe(function (newValue) {
+      console.log('Data Updated');
+    });
 
     var getColumnsForScaffolding = function (data) {
       if ((typeof data.length !== 'number') || data.length === 0) {

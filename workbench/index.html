@@ -14,9 +14,11 @@
 </head>
     <body>
 		<div>
-      <pager params='data:myData'>
+      <filter params='data:myData'>
+      <pager params='data:$component.filteredData'>
         <datagrid params='data:$component.pageItems, columns:$parent.myColumns'></datagrid>
       </pager>
+      </filter>
 			</div>
 		</div>
     <script type='text/javascript' src='main.js'></script>
