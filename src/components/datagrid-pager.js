@@ -12,6 +12,10 @@ ko.components.register("pager" , {
     self.pageItems = ko.observableArray([]);
     self.currentPageIndex = ko.observable(0);
 
+    self.data.subscribe(function (newData) {
+      self.currentPageIndex(0);
+    });
+
     self.previousPage = function () {
       var currIndex = self.currentPageIndex() - 1;
       self.currentPageIndex(currIndex);
@@ -39,11 +43,11 @@ ko.components.register("pager" , {
     self.minRange = ko.pureComputed(function () {
       var min;
       if (self.currentPageIndex() >= self.maxPageIndex() - 3) {
-        min = self.maxPageIndex() - 4
+        min = self.maxPageIndex() - 4;
       } else {
         min = (self.currentPageIndex() - 2) < 0 ? 0 : (self.currentPageIndex() - 2);
       }
-      return min
+      return min < 0 ? 0 : min;
     });
 
     self.maxRange = ko.pureComputed(function () {
@@ -53,7 +57,7 @@ ko.components.register("pager" , {
       } else {
         max = self.currentPageIndex() === 3 ? self.minRange() + 3 : self.minRange() + 4;
       }
-      return max;
+      return max < 0 ? 0 : max;
     });
 
     self.itemsOnCurrentPage = function () {

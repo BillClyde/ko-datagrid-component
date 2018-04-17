@@ -19,6 +19,8 @@ myData and $parent.myColumns exist in the parent view model.
 * Pager (done)
 * Sorting (done)
 * Filtering (in progress)
+* Column Selection
+* Row Select
 * Customizations
 ## Contributors
 [Bill Clyde](https://github.com/billclyde/ko-datagrid-component)

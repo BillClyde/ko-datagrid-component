@@ -2,7 +2,7 @@
 * datagrid-component JavaScript Library
 * Authors: https://github.com/billclyde/datagrid-component/blob/master/README.md
 * License: MIT (http://www.opensource.org/licenses/mit-license.php)
-* Compiled At: 04/16/2018 16:54:56
+* Compiled At: 04/17/2018 10:28:44
 ***********************************************/
 
 (function (ko) {
@@ -25,9 +25,6 @@ ko.components.register("datagrid", {
     self.unsorted = ko.observable(true);
     self.sortedUp = ko.observable(false);
     self.sortedDown = ko.observable(false);
-    self.data.subscribe(function (newValue) {
-      console.log('Data Updated');
-    });
 
     var getColumnsForScaffolding = function (data) {
       if ((typeof data.length !== 'number') || data.length === 0) {
@@ -46,7 +43,6 @@ ko.components.register("datagrid", {
           data[column].unsorted = ko.observable(true);
           data[column].sortedUp = ko.observable(false);
           data[column].sortedDown = ko.observable(false);
-          console.log(data[column].rowText);
         }
       }
       return data;
@@ -95,6 +91,10 @@ ko.components.register("pager" , {
     self.pageItems = ko.observableArray([]);
     self.currentPageIndex = ko.observable(0);
 
+    self.data.subscribe(function (newData) {
+      self.currentPageIndex(0);
+    });
+
     self.previousPage = function () {
       var currIndex = self.currentPageIndex() - 1;
       self.currentPageIndex(currIndex);
@@ -122,11 +122,11 @@ ko.components.register("pager" , {
     self.minRange = ko.pureComputed(function () {
       var min;
       if (self.currentPageIndex() >= self.maxPageIndex() - 3) {
-        min = self.maxPageIndex() - 4
+        min = self.maxPageIndex() - 4;
       } else {
         min = (self.currentPageIndex() - 2) < 0 ? 0 : (self.currentPageIndex() - 2);
       }
-      return min
+      return min < 0 ? 0 : min;
     });
 
     self.maxRange = ko.pureComputed(function () {
@@ -136,7 +136,7 @@ ko.components.register("pager" , {
       } else {
         max = self.currentPageIndex() === 3 ? self.minRange() + 3 : self.minRange() + 4;
       }
-      return max;
+      return max < 0 ? 0 : max;
     });
 
     self.itemsOnCurrentPage = function () {
